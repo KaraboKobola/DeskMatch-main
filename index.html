@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeskMatch - Desktop Organization Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="components/core.css">
+    <link rel="stylesheet" href="components/drag-drop.css">
+    <link rel="stylesheet" href="components/folders.css">
+    <link rel="stylesheet" href="components/timer-game.css">
+    <link rel="stylesheet" href="components/grading.css">
+    <link rel="stylesheet" href="components/ui-helpers.css">
+    <link rel="stylesheet" href="components/selection-edit.css">
+    <link rel="stylesheet" href="components/keyboard.css">
+    <link rel="stylesheet" href="components/voice-control.css">
+</head>
+<body>
+    <div class="intro-screen" id="intro-screen">
+        <div class="intro-content">
+            <h1 class="intro-title">DeskMatch</h1>
+            <p class="intro-description">
+                By turning everyday digital organization tasks into a timed puzzle, DeskMatch aims to combat digital clutter and poor file management habits that plague our daily digital lives. This game makes the often tedious task of organizing files engaging and rewarding, while building real-world skills in systematic thinking, spatial organization, and time management under pressure. The precision and attention to detail required translate directly to improved productivity, reduced digital stress, and better organization in your actual work and personal computer environments.<br><br>
+                Challenge your organizational skills in this precision puzzle.<br>
+                Drag, arrange, and match the target desktop layout perfectly.<br>
+                <strong>Can you achieve 100% accuracy?</strong>
+            </p>
+            
+            <div class="game-preview">
+                <div class="preview-container">
+                    <div class="preview-item">
+                        <svg class="preview-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="6"/>
+                            <circle cx="12" cy="12" r="2"/>
+                        </svg>
+                        <h3>Match Target</h3>
+                        <p>Study the target layout and organize your desktop accordingly</p>
+                    </div>
+                    <div class="preview-item">
+                        <svg class="preview-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12,6 12,12 16,14"/>
+                        </svg>
+                        <h3>Beat Clock</h3>
+                        <p>Complete the challenge in just 1:30</p>
+                    </div>
+                    <div class="preview-item">
+                        <svg class="preview-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                            <line x1="12" y1="11" x2="12" y2="17"/>
+                            <line x1="9" y1="14" x2="15" y2="14"/>
+                        </svg>
+                        <h3>Organize</h3>
+                        <p>Drag items, create folders, and delete unnecessary files</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="start-game-btn" id="start-game-btn">Start Game</button>
+        </div>
+    </div>
+
+    <div class="desktop" id="game-screen" style="display: none;">
+        <div class="game-controls">
+            <button class="end-btn" id="end-btn">Finish this round</button>
+            <div class="timer" id="timer">01:30</div>
+            <div class="target-screenshot" id="target-screenshot">
+                <div class="target-desktop">
+                </div>
+            </div>
+        </div>
+        
+        <div class="desktop-area" id="desktop">
+        </div>
+    </div>
+
+    <div class="modal" id="rename-modal">
+        <div class="modal-content">
+            <h3>Rename Item</h3>
+            <input type="text" id="rename-input" placeholder="Enter new name">
+            <div class="modal-buttons">
+                <button id="rename-confirm">Confirm</button>
+                <button id="rename-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="screenshot-modal" id="screenshot-modal">
+        <div class="screenshot-modal-content">
+            <button class="close-btn" id="close-screenshot">×</button>
+            <div class="screenshot-modal-desktop" id="screenshot-modal-desktop">
+            </div>
+        </div>
+    </div>
+
+    <div class="timeup-modal" id="timeup-modal">
+        <div class="timeup-content">
+            <div class="timeup-icon">⏰</div>
+            <h2 class="timeup-title">Time's Up!</h2>
+            <p class="timeup-message">Your time has run out. Let's see how you did!</p>
+            <button class="timeup-btn" id="show-results-btn">Show Results</button>
+        </div>
+    </div>
+
+    <div class="summary-modal" id="summary-modal">
+        <div class="summary-container">
+            <div class="summary-content">
+                <div class="summary-header">
+                    <div class="grade-display">
+                        <div class="grade-number" id="grade-number">85</div>
+                        <div class="grade-out-of">/100</div>
+                        <div class="grade-letter" id="grade-letter">B+</div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-box correct">
+                        <div class="stat-count" id="correct-count">6</div>
+                        <div class="stat-label">Correct</div>
+                    </div>
+                    <div class="stat-box incorrect">
+                        <div class="stat-count" id="incorrect-count">1</div>
+                        <div class="stat-label">Incorrect</div>
+                    </div>
+                </div>
+
+                <div class="results-grid" id="results-list">
+                </div>
+
+                <div class="summary-footer">
+                    <button class="try-again-btn" id="play-again-btn">Try Again</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="create-icon-modal">
+        <div class="modal-content create-icon-content">
+            <h3>Create New Icon</h3>
+            <div class="icon-type-grid" id="icon-type-grid">
+            </div>
+            <div class="modal-buttons">
+                <button id="create-icon-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="folder-view-modal">
+        <div class="modal-content folder-view-content">
+            <div class="folder-header">
+                <h3 id="folder-title">Folder</h3>
+                <button class="close-folder-btn" id="close-folder-btn">×</button>
+            </div>
+            <div class="folder-items" id="folder-items">
+            </div>
+        </div>
+    </div>
+
+    <div class="help-panel" id="help-panel">
+        <div class="help-header">
+            <h3>Controls & Shortcuts</h3>
+            <button class="close-help-btn" id="close-help-btn">×</button>
+        </div>
+        <div class="help-content">
+            <div class="help-section">
+                <h4>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/>
+                    </svg>
+                    Mouse Controls
+                </h4>
+                <ul>
+                    <li><strong>Click</strong> - Select item (clears previous selection)</li>
+                    <li><strong>Right-Click</strong> - Multi-select item (keeps previous selections)</li>
+                    <li><strong>Click on name</strong> - Rename item</li>
+                    <li><strong>Double-click folder</strong> - Open folder</li>
+                    <li><strong>Drag & Drop</strong> - Move items on grid</li>
+                    <li><strong>Drag to trash</strong> - Delete item</li>
+                    <li><strong>Double-click desktop</strong> - Create new item</li>
+                </ul>
+            </div>
+            <div class="help-section">
+                <h4>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="4" width="20" height="16" rx="2"/>
+                        <path d="M6 8h.01M10 8h.01M14 8h.01"/>
+                    </svg>
+                    Keyboard Shortcuts
+                </h4>
+                <ul>
+                    <li><strong>Arrow Keys</strong> - Navigate to adjacent items</li>
+                    <li><strong>Enter</strong> - Select item</li>
+                    <li><strong>Shift + Enter</strong> - Add newly selected item to selection (multi-select)</li>
+                    <li><strong>G</strong> - Group selected items into folder</li>
+                    <li><strong>G</strong> (in folder) - Ungroup selected items</li>
+                    <li><strong>R</strong> - Rename selected item</li>
+                    <li><strong>M</strong> - Enter move mode</li>
+                    <li><strong>Arrow Keys</strong> (in move mode) - Move item</li>
+                    <li><strong>Enter</strong> (in move mode) - Exit move mode</li>
+                    <li><strong>N</strong> - Create new item</li>
+                    <li><strong>Escape</strong> - Cancel action / Exit keyboard navigation</li>
+                    <li><strong>?</strong> - Toggle this help panel</li>
+                </ul>
+            </div>
+            <div class="help-section">
+                <h4>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    Folder Management
+                </h4>
+                <ul>
+                    <li>Select 2+ items → Press <strong>G</strong> → Creates folder</li>
+                    <li>Double-click folder → Click items → Press <strong>G</strong> → Takes out</li>
+                    <li>Gold button appears when items selected</li>
+                    <li>Brown button appears for ungrouping</li>
+                </ul>
+            </div>
+            <div class="help-section">
+                <h4>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    Protected Items
+                </h4>
+                <ul>
+                    <li><strong>Browser, Printer, Settings</strong> - Cannot rename, delete, or group</li>
+                    <li>All other items are movable and editable</li>
+                </ul>
+            </div>
+            <div class="help-section">
+                <h4>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                        <line x1="12" y1="19" x2="12" y2="23"/>
+                        <line x1="8" y1="23" x2="16" y2="23"/>
+                    </svg>
+                    Voice Commands
+                </h4>
+                <ul>
+                    <li><strong>"Select [name]"</strong> - Select an item by name (clears previous selection)</li>
+                    <li><strong>"Shift select [name]"</strong> - Add item to selection (keeps previous selections)</li>
+                    <li><strong>"Delete" / "Remove"</strong> - Delete selected item</li>
+                    <li><strong>"Move up/down/left/right"</strong> - Move selected item</li>
+                    <li><strong>"Rename to [name]"</strong> - Rename selected item</li>
+                    <li><strong>"Group" / "Create folder"</strong> - Group selected items</li>
+                    <li><strong>"Create image/text/zip/video"</strong> - Create new item</li>
+                    <li><strong>"Deselect"</strong> - Clear selection</li>
+                    <li><strong>"Help"</strong> - Toggle this panel</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <button class="help-toggle-btn" id="help-toggle-btn">?</button>
+
+    <script src="script.js"></script>
+    <script src="components/core.js"></script>
+    <script src="components/voice-control.js"></script>
+    <script src="components/drag-drop.js"></script>
+    <script src="components/selection-edit.js"></script>
+    <script src="components/folders.js"></script>
+    <script src="components/keyboard.js"></script>
+    <script src="components/grading.js"></script>
+    <script src="components/timer-game.js"></script>
+    <script src="components/ui-helpers.js"></script>
+    
+</body>
+</html>

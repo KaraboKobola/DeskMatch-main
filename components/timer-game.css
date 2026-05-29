@@ -1,0 +1,39 @@
+.timer {
+    background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 50px;
+    font-size: 20px;
+    font-weight: 600;
+    font-family: 'Roboto Condensed', 'Inter', sans-serif;
+    text-align: center;
+    min-width: 90px;
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+    animation: timerPulse 1s ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.5px;
+}
+
+@keyframes timerPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.timer.warning {
+    background: linear-gradient(135deg, #d4af37 0%, #c9a030 100%);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+    animation: pulse 1s infinite;
+}
+
+.timer.danger {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.5);
+    animation: pulse 0.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
